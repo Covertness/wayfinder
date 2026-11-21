@@ -20,6 +20,7 @@ django = "*"
 celery = {extras = ["redis"], version = "*"}
 django-celery-beat = "*"
 django-health-check = {extras = ["redis", "celery"], version = "*"}
+django-otp = "*"
 
 [dev-packages]
 

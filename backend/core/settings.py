@@ -163,6 +163,8 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     # ----------------------------------- AUTH ----------------------------------- #
     "dj_rest_auth",
+    "django_otp",
+    "django_otp.plugins.otp_totp",
     # ----------------------------------- CORS ----------------------------------- #
     "corsheaders",  # Django CORS Headers
     # ----------------------------------- REST ----------------------------------- #
@@ -299,7 +301,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        "wayfinder.authentication.SessionOrIntegrationTokenAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     # "DEFAULT_THROTTLE_CLASSES": [
@@ -358,4 +360,8 @@ REST_AUTH = {
     "TOKEN_SERIALIZER": None,
     "SESSION_LOGIN": True,
     "OLD_PASSWORD_FIELD_ENABLED": False,
+    "LOGIN_SERIALIZER": "wayfinder.two_factor.TwoFactorLoginSerializer",
 }
+
+OTP_TOTP_ISSUER = "Wayfinder"
+OTP_ADMIN_HIDE_SENSITIVE_DATA = True

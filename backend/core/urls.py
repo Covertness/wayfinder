@@ -24,6 +24,10 @@ from drf_spectacular.views import (
 )
 from health_check.views import HealthCheckView
 from redis.asyncio import Redis as RedisClient
+from wayfinder.two_factor import TwoFactorAdminAuthenticationForm
+
+admin.site.login_form = TwoFactorAdminAuthenticationForm
+admin.site.login_template = "wayfinder/admin_login.html"
 
 
 urlpatterns = [

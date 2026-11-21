@@ -6,6 +6,7 @@ import PasswordChange from "@/components/settings/PasswordChange";
 import UsernameChange from "@/components/settings/UsernameChange";
 import OverlandToken from "@/components/settings/OverlandToken";
 import TimezoneSettings from "@/components/settings/TimezoneSettings";
+import TwoFactorSettings from "@/components/settings/TwoFactorSettings";
 
 const Settings = () => {
   const { user } = useUserStore();
@@ -25,6 +26,7 @@ const Settings = () => {
               <ProfileInfo />
               <UsernameChange />
               <PasswordChange />
+              <TwoFactorSettings />
               <TimezoneSettings />
             </TabsContent>
             <TabsContent value="team" className="mt-6 space-y-6">

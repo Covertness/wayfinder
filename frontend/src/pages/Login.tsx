@@ -3,6 +3,7 @@ import type { LoginFormValues } from "@/components/login/LoginForm";
 import { toast } from "sonner";
 import RedirectIfAuthenticatedLayout from "@/layouts/RedirectIfAuthenticatedLayout";
 import { authLoginCreate } from "@/api/django/auth/auth";
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "@/assets/icon.svg?react";
@@ -10,19 +11,25 @@ import Icon from "@/assets/icon.svg?react";
 const Login = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [otpRequired, setOtpRequired] = useState(false);
 
   const handleLogin = async (formData: LoginFormValues) => {
     try {
       setIsLoading(true);
-      await authLoginCreate({
-        username: formData.username,
-        password: formData.password
-      });
-      setIsLoading(false);
+      await authLoginCreate(formData);
       navigate("/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error logging in", error);
-      toast.error("Invalid username or password");
+      if (axios.isAxiosError(error) && Array.isArray(error.response?.data?.otp)) {
+        setOtpRequired(true);
+        if (formData.otp) {
+          toast.error("Invalid or temporarily throttled authenticator code.");
+        }
+      } else {
+        toast.error("Unable to log in. Check your credentials and try again.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -42,7 +49,7 @@ const Login = () => {
               <Icon className="h-[50px]" />
               <h1 className="text-xl font-bold">Welcome to Wayfinder</h1>
             </div>
-            <LoginForm onSubmit={handleLogin} isSubmitting={isLoading} />
+            <LoginForm onSubmit={handleLogin} isSubmitting={isLoading} otpRequired={otpRequired} />
           </div>
         </div>
       </div>

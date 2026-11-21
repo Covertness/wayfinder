@@ -78,6 +78,25 @@ Then go to your user (bottom left) → **Settings**:
 3. Set the Overland server URL to `<BASE_URL>/api/wayfinder/overland/`
 4. Update your username and password if needed
 
+### Two-factor authentication
+
+Use HTTPS, and apply database migrations when updating an existing installation.
+In **Settings → User → Two-factor authentication**, enter your current password,
+scan the QR code with an authenticator app (or enter the setup key), and confirm
+with its six-digit code. Future web and Django admin logins require a new code.
+Codes cannot be reused, so wait for the next code after enabling it. Disabling
+two-factor authentication requires your password and a fresh code. Existing
+authenticated sessions remain active when two-factor authentication is enabled.
+
+There are no recovery codes. If you lose your authenticator, another administrator
+can delete your TOTP device in Django admin under **OTP_TOTP → TOTP devices**.
+Alternatively, an operator with server access can use `python manage.py shell`
+to delete `TOTPDevice.objects.filter(user__username="<username>")` after importing
+`TOTPDevice` from `django_otp.plugins.otp_totp.models`. Protect database backups:
+they contain authenticator secrets. Existing Overland bearer tokens continue to
+work for location uploads; when two-factor authentication is enabled they cannot
+be used as general API login tokens.
+
 ### Overland Settings for Wayfinder
 
 These are the settings that work best with Wayfinder:

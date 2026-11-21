@@ -2,6 +2,7 @@
 
 # Django
 from django.urls import path, include
+from .two_factor import TwoFactorView
 
 
 # Local App
@@ -22,4 +23,5 @@ urlpatterns = [
     path("trips/", TripsView.as_view(), name="trips"),
     path("activity/history/", ActivityHistoryView.as_view(), name="activity-history"),
     path("settings/", UserSettingsView.as_view(), name="user-settings"),
+    path("settings/two-factor/", TwoFactorView.as_view(), name="two-factor"),
 ]

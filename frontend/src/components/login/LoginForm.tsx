@@ -18,7 +18,8 @@ import { Loader2Icon } from "lucide-react";
 /* ----------------------------------- Zod ---------------------------------- */
 export const LoginFormSchema = z.object({
   username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required")
+  password: z.string().min(1, "Password is required"),
+  otp: z.string().optional()
 });
 
 export type LoginFormValues = z.infer<typeof LoginFormSchema>;
@@ -27,15 +28,17 @@ export type LoginFormValues = z.infer<typeof LoginFormSchema>;
 interface Props {
   onSubmit: (values: LoginFormValues) => void;
   isSubmitting?: boolean;
+  otpRequired: boolean;
 }
 
-export function LoginForm({ onSubmit, isSubmitting }: Props) {
+export function LoginForm({ onSubmit, isSubmitting, otpRequired }: Props) {
   /* ----------------------------- React hook form ---------------------------- */
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
       username: "",
-      password: ""
+      password: "",
+      otp: ""
     }
   });
 
@@ -56,6 +59,22 @@ export function LoginForm({ onSubmit, isSubmitting }: Props) {
             </FormItem>
           )}
         />
+
+        {otpRequired && (
+          <FormField
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Authenticator code</FormLabel>
+                <FormControl>
+                  <Input {...field} inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="6-digit code" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormField
           control={form.control}
